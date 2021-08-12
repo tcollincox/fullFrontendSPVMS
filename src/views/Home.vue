@@ -23,7 +23,6 @@ export default {
     return{
       manageVolunteers: require('../assets/manageVolunteers.svg'),
       manageOpportunities: require('../assets/manageOpportunities.svg'),
-
     }
   }
 }
@@ -78,7 +77,7 @@ ul{
 .limited{
   margin:0 auto;
   margin-top:3vh;
-  width:20vh;
+  width:20vw;
 }
 .navbar{
   background-color:#FE7A53;
