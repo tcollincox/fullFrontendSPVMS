@@ -35,7 +35,7 @@ export default {
 #nav {
   background-color: #FE7A53;
   font-family: 'M PLUS Rounded 1c', sans-serif;
-  font-size: 20px;
+  font-size: 2vh;
   height: 8vh;
   display: flex;
   align-items: center;
