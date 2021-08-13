@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Find Opportunity</h3>
+    <h3>Edit and Delete</h3>
   </div>
 </template>
 

@@ -31,7 +31,7 @@ export default {
 <style scoped>
   h1{
   font-size: 64px;
-}
+  }
 .homeText{
     font-size: 35px;
     text-align: center;
