@@ -25,11 +25,11 @@
     <div class="form-line">
     <span class="form-line__field">
       <label for="username">Username</label>
-      <input v-model="newVolunteer.username" placeholder="Username" class="input" id="username">
+      <input v-model="newVolunteer.username" placeholder="Username" autocomplete="off" class="input" id="username">
     </span>
     <span class="form-line__field"> 
       <label for="password">Password</label>
-      <input type="password" v-model="newVolunteer.password" placeholder="Password" class="input" id="passwword">
+      <input :type=field.password v-model="newVolunteer.password" placeholder="Password" class="input" id="passwword" value="" @focus="changeType" @blur="changeType" autocomplete="off"> 
     </span>
     </div>
     <label for="status">Approval Status</label>
@@ -54,10 +54,14 @@
       <option v-for="day in days" :key="day.id" >{{day.text}}</option>
     </select>
     <input id="avalibility-times" type="time" name="avalibility-times"
-         min="7:00" max="19:00" v-model="timeParing.time">
+          v-model="timeParing.time">
     <button @click="addTime(timeParing)">Add Time</button>
+    <span>
+      <ul>
+        <li v-for="(times, i) in newVolunteer.avalibilityTimes" :key="times.id" class="chosenTime" v-on:click="deleteOption(i)"><span class="chosen-times" >{{times}} <span class="delete-click" ><b>x</b></span></span></li>
+      </ul>
+    </span>
     <div>
-      
       <label for="address">Address</label>
       <input v-model="newVolunteer.address" placeholder="Address" class="input" id="address">
     </div>
@@ -77,8 +81,7 @@
       </span>
       <span>
         <label for="address">Home:</label>
-        <input v-model="newVolunteer.homePhone" type="tel" id="home-phone" name="phone"
-        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
+        <input v-model="newVolunteer.homePhone" type="tel" id="home-phone" name="phone">
       </span>
     </div>
     <div>
@@ -103,7 +106,7 @@
     </div>
     <div>
       <label for="email">Emergency Contact Email:</label>
-      <input v-model="newVolunteer.emergencyContactEmail" placeholder="Email" class="input" id="emergencyContactEmail" pattern="/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/" size="30" required>
+      <input v-model="newVolunteer.emergencyContactEmail" placeholder="Email" class="input" id="emergencyContactEmail" pattern="/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/" required>
     </div>
     <div>
       <label for="address">Emergency Contact Address</label>
@@ -126,7 +129,7 @@
       <label for="no">No</label>
     </div>
     <button @click="submit()">Submit</button>
-    <button @click="onReset">Cancel</button>
+    <button @click="clearForm()">Reset</button>
 
 
   </div>
@@ -195,7 +198,6 @@ export default {
         {text: 'High School Diploma or Equivalent'},
         {text: 'Some College, No Degree'},
         {text: 'Associate\'s Degree'},
-        {text: 'Associate\'s Degree'},
         {text: 'Bachelor\'s Degree'},
         {text: 'Apprenticeship'},
         {text: 'Master\'s Degree'},
@@ -207,6 +209,10 @@ export default {
         { text: 'Other'}
       ],
       days:[{text:"Monday"},{text:"Tuesday"},{text:"Wednesday"},{text:"Thursday"},{text:"Friday"},{text:"Saturday"}],
+      field:{
+        password:'text'
+      },
+      users: []
       
 
     }
@@ -220,15 +226,142 @@ export default {
         event.preventDefault()
     },
     addTime(givenTime){
-      console.log(givenTime.day +' '+ givenTime.time)
-      if(givenTime.day != '' || givenTime.time != ''){
+      let notCurrentlyIn = true;
+      for(var i = 0; i< this.newVolunteer.avalibilityTimes.length; i++){
+        if((givenTime.day + ' ' + givenTime.time) == this.newVolunteer.avalibilityTimes[i]){
+          notCurrentlyIn = false;
+        }
+      }
+      if(notCurrentlyIn && (givenTime.day != null || givenTime.time != null)){
         this.newVolunteer.avalibilityTimes.push(givenTime.day + ' ' + givenTime.time);
       }
     },
     submit(){
-      alert(JSON.stringify(this.newVolunteer));
-    } 
+      if(this.validate()){
+        this.axios.post('http://localhost:3001/volunteers/Post', {
+          firstName: this.newVolunteer.firstName,
+          lastName: this.newVolunteer.lastName,
+          username: this.newVolunteer.username,
+          password: this.newVolunteer.password,
+          approvalStatus: this.newVolunteer.approvalStatus,
+          preferredCenters: this.newVolunteer.preferredCenters,
+          skills: this.newVolunteer.skills,
+          avalibilityTimes: this.newVolunteer.avalibilityTimes,
+          address: this.newVolunteer.address,
+          homePhone: this.newVolunteer.homePhone,
+          cellPhone: this.newVolunteer.cellPhone,
+          workPhone: this.newVolunteer.workPhone,
+          email: this.newVolunteer.email,
+          educationalBackground: this.newVolunteer.educationalBackground,
+          licenses: this.newVolunteer.licenses,
+          emergencyContactName: this.newVolunteer.emergencyContactName,
+          emergencyContactPhone: this.newVolunteer.emergencyContactPhone,
+          emergencyContactEmail: this.newVolunteer.emergencyContactEmail,
+          emergencyContactAddress: this.newVolunteer.emergencyContactAddress,
+          driverLicenseOnFile: this.newVolunteer.driverLicenseOnFile,
+          socialSecurityOnFile: this.newVolunteer.socialSecurityOnFile,
+        })
+        
+        this.clearForm();
+      }
+    },
+    changeType(){
+      this.field.password = 'password';
+    },
+    deleteOption(i){
+      this.newVolunteer.avalibilityTimes.splice(i,1);
+    },
+    validate(){
+      let validation = true;
+      let regexPhone = new RegExp('[0-9]{3}-[0-9]{3}-[0-9]{4}');
+      let phonePatternCheck = regexPhone.test(this.newVolunteer.cellPhone);
+      let usernameExists = this.usernames.includes(this.newVolunteer.username);
+      if(this.newVolunteer.firstName == ''){
+        this.volunteerValidation.firstName = true;
+        validation = false;
+      }
+      else{this.volunteerValidation.firstName = false}
+      if(this.newVolunteer.lastName == ''){
+        this.volunteerValidation.lastName = true;
+        validation = false;
+      }
+      else{this.volunteerValidation.lastName = false}
+      if(this.newVolunteer.username == '' || usernameExists){
+        this.volunteerValidation.username = true;
+        validation = false;
+      }
+      else{this.volunteerValidation.username = false}
+      if(this.newVolunteer.password == ''){
+        this.volunteerValidation.password = true;
+        validation = false;
+      }
+      else{this.volunteerValidation.password = false}
+      if(this.newVolunteer.approvalStatus == ''){
+        this.volunteerValidation.approvalStatus = true;
+        validation = false;
+      }
+      else{this.volunteerValidation.approvalStatus = false}
+      if(this.newVolunteer.address == ''){
+        this.volunteerValidation.address = true;
+        validation = false;
+      }
+      else{this.volunteerValidation.address = false}
+      if(this.newVolunteer.cellPhone == '' || !phonePatternCheck ){
+        this.volunteerValidation.cellPhone = true;
+        validation = false;
+      }
+      else{this.volunteerValidation.cellPhone = false}
+      if(this.newVolunteer.email == ''){
+        this.volunteerValidation.email = true;
+        validation = false;
+      }
+      else{this.volunteerValidation.email = false}
+      if(this.newVolunteer.educationalBackground == ''){
+        this.volunteerValidation.educationalBackground = true;
+        validation = false;
+      }
+      else{this.volunteerValidation.educationalBackground = false}
+      return validation;
+    },
+    clearForm(){
+        this.newVolunteer.firstName= '';
+        this.newVolunteer.lastName= '';
+        this.newVolunteer.username= '';
+        this.newVolunteer.password= '';
+        this.newVolunteer.approvalStatus= '';
+        this.newVolunteer.preferredCenters= [];
+        this.newVolunteer.skills= [];
+        this.newVolunteer.avalibilityTimes= [];
+        this.newVolunteer.address= '';
+        this.newVolunteer.homePhone= '';
+        this.newVolunteer.cellPhone= '';
+        this.newVolunteer.workPhone= '';
+        this.newVolunteer.email= '';
+        this.newVolunteer.educationalBackground= '';
+        this.newVolunteer.licenses= [];
+        this.newVolunteer.emergencyContactName= '';
+        this.newVolunteer.emergencyContactPhone= '';
+        this.newVolunteer.emergencyContactEmail= '';
+        this.newVolunteer.emergencyContactAddress= '';
+        this.newVolunteer.driverLicenseOnFile= false;
+        this.newVolunteer.socialSecurityOnFile= false;
+      }
   },
+  mounted(){
+    this.axios
+      .get('http://localhost:3001/volunteers')
+      .then(response => (this.users = response.data))
+  },
+  computed: {
+    usernames: function(){
+      let usernameList = [];
+      for(var i = 0; i<this.users.length;i++){
+        usernameList.push(this.users[i].username);
+      }
+      return usernameList;
+    }
+  }
+
     
 }
 </script>
@@ -263,6 +396,9 @@ span label{
 }
 li{
   list-style: none;
+}
+li .inline{
+  list-style: none;
   display: inline;
 }
 .form-check{
@@ -270,5 +406,19 @@ li{
 }
 .check-space{
   margin-left:3px;
+}
+
+.chosenTime{
+  margin:0px 4px 0px 4px;
+  display: inline;
+}
+
+.delete-click:hover{
+  color:red;
+  cursor: pointer;
+}
+
+.validation{
+  color: red;
 }
 </style>
