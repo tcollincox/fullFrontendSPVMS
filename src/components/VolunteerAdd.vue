@@ -12,124 +12,126 @@
       <li v-if="volunteerValidation.email" class="validation">Email format incorrect or field empty</li>
       <li v-if="volunteerValidation.educationalBackground" class="validation">No Education chosen</li>
     </ul>
+    <h2>Personal Info</h2>
     <div class="form-line">
       <span class="form-line__field">
-        <label for="firstName">First Name</label>
+        <label for="firstName">First Name:</label>
         <input v-model="newVolunteer.firstName" placeholder="First name" class="input" id="firstName">
       </span>
       <span class="form-line__field">
-        <label for="lastName">Last Name</label>
+        <label for="lastName">Last Name:</label>
         <input v-model="newVolunteer.lastName" placeholder="Last name" class="input" id="lastName">
       </span>
     </div>
     <div class="form-line">
-    <span class="form-line__field">
-      <label for="username">Username</label>
-      <input v-model="newVolunteer.username" placeholder="Username" autocomplete="off" class="input" id="username">
-    </span>
-    <span class="form-line__field"> 
-      <label for="password">Password</label>
-      <input :type=field.password v-model="newVolunteer.password" placeholder="Password" class="input" id="passwword" value="" @focus="changeType" @blur="changeType" autocomplete="off"> 
-    </span>
+      <span class="form-line__field">
+        <label for="username">Username:</label>
+        <input v-model="newVolunteer.username" placeholder="Username" autocomplete="off" class="input" id="username">
+      </span>
+      <span class="form-line__field"> 
+        <label for="password">Password:</label>
+        <input :type=field.password v-model="newVolunteer.password" placeholder="Password" class="input" id="passwword" value="" @focus="changeType" @blur="changeType" autocomplete="off"> 
+      </span>
     </div>
-    <label for="status">Approval Status</label>
-    <select id="status" name="status" v-model="newVolunteer.approvalStatus" >
-      <option v-for="approvalStatus in approvalStati" :key="approvalStatus.id">{{approvalStatus}}</option>
-    </select>
-    <br/>
-    <h2>Preferred Center</h2>
-    <div class="form-line form-check" v-for="preferredCenter in preferredCentersOptions" :key="preferredCenter.id">
-      <label class="form-label-checkbox" :for="preferredCenter.id">{{preferredCenter.text}}</label>
-      <input type="checkbox" v-model="newVolunteer.preferredCenters" :id="preferredCenter.text" :value="preferredCenter.text" class="check-space">
+    <h2>Contact Info</h2>
+    <div class="form-line">
+      <label for="address">Address:</label>
+      <input v-model="newVolunteer.address" placeholder="Address" class="input" id="address">
     </div>
-    <br/>
-    <h2>Skills</h2>
-    <div class="form-line form-check" v-for="skill in skillsOptions" :key="skill.id">
-      <label class="form-label-checkbox" :for="skill.id">{{skill.text}}</label>
-      <input type="checkbox" v-model="newVolunteer.skills" :id="skill.text" :value="skill.text" class="check-space">
+    <div class="form-line">
+      <h4>Phones: Enter in format 904-444-4444 (Only Cell Required)</h4>
+      <span>
+        <label for="cell-phone">Cell:</label>
+        <input v-model="newVolunteer.cellPhone" type="tel" id="cell-phone" name="phone" placeholder="904-444-4444">
+      </span>
+      <span>
+        <label for="work-phone">Work:</label>
+        <input v-model="newVolunteer.workPhone" type="tel" id="work-phone" name="phone" placeholder="904-444-4444">
+      </span>
+      <span>
+        <label for="home-phone">Home:</label>
+        <input v-model="newVolunteer.homePhone" type="tel" id="home-phone" name="phone" placeholder="904-444-4444">
+      </span>
     </div>
-    <h2>Avalibility Times</h2>
-    <label for="avalibility-times">Choose day and start time parings and click add: </label>
-    <select id="day" name="day" v-model="timeParing.day">
+    <div>
+      <label for="email" class="margin-top-bottom">Email:</label>
+      <input v-model="newVolunteer.email" placeholder="Email" class="input" id="email">
+    </div>
+    <h2>Volunteer Based Info</h2>
+    <h3>Avalibility Times</h3>
+    <label for="avalibility-times">Choose day and start time parings: </label>
+    <select id="day" name="day" v-model="timeParing.day" class="time-input">
       <option v-for="day in days" :key="day.id" >{{day.text}}</option>
     </select>
     <input id="avalibility-times" type="time" name="avalibility-times"
-          v-model="timeParing.time">
-    <button @click="addTime(timeParing)">Add Time</button>
+          v-model="timeParing.time" class="time-input">
+    <b-button @click="addTime(timeParing)">Add Time</b-button>
     <span>
       <ul>
         <li v-for="(times, i) in newVolunteer.avalibilityTimes" :key="times.id" class="chosenTime" v-on:click="deleteOption(i)"><span class="chosen-times" >{{times}} <span class="delete-click" ><b>x</b></span></span></li>
       </ul>
     </span>
     <div>
-      <label for="address">Address</label>
-      <input v-model="newVolunteer.address" placeholder="Address" class="input" id="address">
-    </div>
-    <div>
-      <label for="address">Phones: Enter in format (904-444-4444) (Only Cell Required)</label>
-      <br/>
-      <span>
-     
-        <label for="address">Cell:</label>
-        <input v-model="newVolunteer.cellPhone" type="tel" id="cell-phone" name="phone"
-        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
-      </span>
-      <span>
-        <label for="address">Work:</label>
-        <input v-model="newVolunteer.workPhone" type="tel" id="work-phone" name="phone"
-        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
-      </span>
-      <span>
-        <label for="address">Home:</label>
-        <input v-model="newVolunteer.homePhone" type="tel" id="home-phone" name="phone">
-      </span>
-    </div>
-    <div>
-      
-      <label for="email">Email:</label>
-      <input v-model="newVolunteer.email" placeholder="Email" class="input" id="email" pattern="/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/" size="30" required>
-    </div>
-    <div>
       <label for="education">Highest Level of Education: </label>
       <select id="education" name="education" v-model="newVolunteer.educationalBackground" >
         <option v-for="level in education" :key="level.id">{{level.text}}</option>
       </select>
     </div>
-    <h2>Licences</h2>
+    <h3>Preferred Center</h3>
+    <div class="form-line form-check" v-for="preferredCenter in preferredCentersOptions" :key="preferredCenter.id">
+      <label class="form-label-checkbox" :for="preferredCenter.id">{{preferredCenter.text}}</label>
+      <input type="checkbox" v-model="newVolunteer.preferredCenters" :id="preferredCenter.text" :value="preferredCenter.text" class="check-space">
+    </div>
+    <br/>
+    <h3>Skills</h3>
+    <div class="form-line form-check" v-for="skill in skillsOptions" :key="skill.id">
+      <label class="form-label-checkbox" :for="skill.id">{{skill.text}}</label>
+      <input type="checkbox" v-model="newVolunteer.skills" :id="skill.text" :value="skill.text" class="check-space">
+    </div>
+    
+    <h3>Licences</h3>
     <div class="form-line form-check" v-for="licenses in licensesOptions" :key="licenses.id">
       <label class="form-label-checkbox" :for="licenses.id">{{licenses.text}}</label>
       <input type="checkbox" v-model="newVolunteer.licenses" :id="licenses.text" :value="licenses.text" class="check-space">
     </div>
+    <h2>Emergency Contact Info</h2>
     <div class="form-line">
-        <label for="firstName">Emergency Contact Name</label>
+        <label for="firstName">Emergency Contact Name: </label>
         <input v-model="newVolunteer.emergencyContactName" placeholder="Name" class="input" id="emergencyContactName">
     </div>
-    <div>
-      <label for="email">Emergency Contact Email:</label>
-      <input v-model="newVolunteer.emergencyContactEmail" placeholder="Email" class="input" id="emergencyContactEmail" pattern="/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/" required>
+    <div class="form-line">
+      <label for="email">Emergency Contact Email: </label>
+      <input v-model="newVolunteer.emergencyContactEmail" placeholder="Email" id="emergencyContactEmail">
     </div>
-    <div>
-      <label for="address">Emergency Contact Address</label>
+    <div class="form-line">
+      <label for="address">Emergency Contact Address: </label>
       <input v-model="newVolunteer.emergencyContactAddress" placeholder="Address" class="input" id="emergencyContactAddress">
     </div>
-    <div>
-      <h2>Drivers License on File</h2>
+    <h2>Ready to Approve</h2>
+    <div class="form-line">
+      <label for="status">Approval Status</label>
+      <select id="status" name="status" v-model="newVolunteer.approvalStatus" >
+        <option v-for="approvalStatus in approvalStati" :key="approvalStatus.id">{{approvalStatus}}</option>
+      </select>
+    </div>
+    <div class="form-line">
+      <h3>Drivers License on File</h3>
       <input type="radio" id="yes" value="true" v-model="newVolunteer.driverLicenseOnFile">
       <label for="yes">Yes</label>
       <br>
       <input type="radio" id="no" value="false" v-model="newVolunteer.driverLicenseOnFile">
       <label for="no">No</label>
     </div>
-    <div>
-      <h2>Social Security on File</h2>
+    <div class="form-line">
+      <h3>Social Security on File</h3>
       <input type="radio" id="yes" value="true" v-model="newVolunteer.socialSecurityOnFile">
       <label for="yes">Yes</label>
       <br>
       <input type="radio" id="no" value="false" v-model="newVolunteer.socialSecurityOnFile">
       <label for="no">No</label>
     </div>
-    <button @click="submit()">Submit</button>
-    <button @click="clearForm()">Reset</button>
+    <b-button @click="submit()">Submit</b-button>
+    <b-button @click="clearForm()">Reset</b-button>
 
 
   </div>
@@ -370,7 +372,9 @@ export default {
 button{
   min-width: 80px;
   margin:3vh 1vw 3vh 1vw;
-  width:5vw;
+  width:10vw;
+  background-color:#FE7A53;
+  border:none;
 }
 .margin-top-bottom{
   margin-top:1vh;
@@ -420,5 +424,20 @@ li .inline{
 
 .validation{
   color: red;
+}
+
+h3{
+  font-size: 20px;
+  margin-top:5px;
+}
+
+h4{
+   font-size: 15px;
+  margin-top:5px;
+}
+.time-input{
+  margin: 0px 3px;
+  width: 100px;
+  height: 30px;
 }
 </style>
