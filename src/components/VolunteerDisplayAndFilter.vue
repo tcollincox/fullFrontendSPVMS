@@ -1,8 +1,8 @@
 <template>
 <div id="page">
   <editAndDelete v-if="pageDisplay=='editAndDelete'" v-bind:volunteer="selectedVolunteer" v-on:change-to-display="changeToDisplay"/>
-  <matchWithOpportunity v-if="pageDisplay=='matchWithOpportunity'"/>
-  <fullDetail v-if="pageDisplay=='fullDetail'" v-bind:volunteer="selectedVolunteer" v-on:change-to-display="changeToDisplay"/>
+  <matchWithOpportunity v-if="pageDisplay=='matchWithOpportunity'" v-bind:volunteer="selectedVolunteer" v-on:change-to-display="changeToDisplay"/>
+  <fullDetail v-if="pageDisplay=='fullDetail'" v-bind:volunteer="selectedVolunteer" v-on:change-to-display="changeToDisplay" v-on:change-to-edit="changeToEdit"/>
   <div v-if="pageDisplay=='display'">
     <div>
       <h3>Display And Filter</h3>
@@ -21,6 +21,7 @@
         <th>Username</th>
         <th>Approval Status</th>
         <th>See All Details</th>
+        <th>Match with Opportunities</th>
         <th>Edit</th>
         <th>Delete</th>
       </tr>
@@ -29,6 +30,7 @@
         <td>{{volunteer.username}}</td>
         <td>{{volunteer.approvalStatus}}</td>
         <td class="table-click" @click="seeFullDetail(i)">All Details</td>
+        <td class="table-click" @click="matchWithOpportunities(i)">Match</td>
         <td class="table-click" @click="edit(i)"> Edit </td>
         <td class="table-click" @click="deleteVolunteer(i)">X</td>
       </tr>
@@ -107,6 +109,13 @@ export default {
       console.log("activated")
       this.selectedVolunteer = this.volunteersFiltered[volunteer];
       this.pageDisplay = 'fullDetail';
+    },
+    changeToEdit(){
+      this.pageDisplay = 'editAndDelete';
+    },
+    matchWithOpportunities(volunteer){
+      this.selectedVolunteer = this.volunteersFiltered[volunteer];
+      this.pageDisplay = 'matchWithOpportunity';
     }
   },
   components:{
