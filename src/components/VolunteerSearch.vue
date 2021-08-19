@@ -1,7 +1,7 @@
 <template>
 <div id="page">
   <editAndDelete v-if="pageDisplay=='editAndDelete'" v-bind:volunteer="selectedVolunteer" v-on:change-to-display="changeToDisplay"/>
-  <matchWithOpportunity v-if="pageDisplay=='matchWithOpportunity'"/>
+  <matchWithOpportunity v-if="pageDisplay=='matchWithOpportunity'" v-bind:volunteer="selectedVolunteer" v-on:change-to-display="changeToDisplay"/>
   <fullDetail v-if="pageDisplay=='fullDetail'" v-bind:volunteer="selectedVolunteer" v-on:change-to-display="changeToDisplay" v-on:change-to-edit="changeToEdit"/>
   <div v-if="pageDisplay=='display'">
     <div>
@@ -13,11 +13,12 @@
       <b-button @click="searchAndReturn()">Search</b-button>
     </div>
     <table v-if="volunteersFiltered.length>0" class="table-display">
-      <tr>
+       <tr>
         <th>Name</th>
         <th>Username</th>
         <th>Approval Status</th>
         <th>See All Details</th>
+        <th>Match with Opportunities</th>
         <th>Edit</th>
         <th>Delete</th>
       </tr>
@@ -26,6 +27,7 @@
         <td>{{volunteer.username}}</td>
         <td>{{volunteer.approvalStatus}}</td>
         <td class="table-click" @click="seeFullDetail(i)">All Details</td>
+        <td class="table-click" @click="matchWithOpportunities(i)">Match</td>
         <td class="table-click" @click="edit(i)"> Edit </td>
         <td class="table-click" @click="deleteVolunteer(i)">X</td>
       </tr>
@@ -122,6 +124,10 @@ export default {
       this.searchType = newType.text
       this.searchTypeChoice = newType.value;
     },
+    matchWithOpportunities(volunteer){
+      this.selectedVolunteer = this.volunteersFiltered[volunteer];
+      this.pageDisplay = 'matchWithOpportunity';
+    },
     searchAndReturn(){
       var regex = new RegExp(this.searchText, );
       this.volunteersFiltered = [];
@@ -186,4 +192,12 @@ export default {
     cursor:pointer;
     color:red;
   }
+  button{
+  min-width: 80px;
+  margin: 4vh 2vw 4vh 2vw;
+  background-color:#FE7A53;
+  border:none;
+  width: 150px;
+  border-radius: 20px;
+}
 </style>
