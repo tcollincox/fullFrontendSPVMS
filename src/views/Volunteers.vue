@@ -33,9 +33,12 @@ export default {
 
 <style scoped>
 button{
+  min-width: 80px;
   margin: 4vh 2vw 4vh 2vw;
-  background-color:#3F3D56;
+  background-color:#FE7A53;
   border:none;
+  width: 150px;
+  border-radius: 20px;
 }
 button:focus{
   background-color:#FE7A53;

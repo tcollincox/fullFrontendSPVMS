@@ -371,10 +371,11 @@ export default {
 <style scoped>
 button{
   min-width: 80px;
-  margin:3vh 1vw 3vh 1vw;
-  width:10vw;
+  margin: 4vh 2vw 4vh 2vw;
   background-color:#FE7A53;
   border:none;
+  width: 150px;
+  border-radius: 20px;
 }
 .margin-top-bottom{
   margin-top:1vh;
