@@ -44,9 +44,9 @@ export default {
         title: this.filledOpportunity.title ,
         center: this.filledOpportunity.center,
         opportunityId: this.filledOpportunity.opportunityId,
-        volunteerId: this.filledOpportunity._id,
-        volunteerFirstName: this.filledOpportunity.firstName,
-        volunteerLastName: this.filledOpportunity.lastName,
+        volunteerId: this.filledOpportunity.volunteerId,
+        volunteerFirstName: this.filledOpportunity.volunteerFirstName,
+        volunteerLastName: this.filledOpportunity.volunteerLastName,
         });
       }
     }
