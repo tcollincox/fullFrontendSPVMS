@@ -220,13 +220,6 @@ export default {
     }
   },
   methods:{
-    onSubmit(event){
-      event.preventDefault();
-      alert(JSON.stringify(this.newVolunteer));
-    },
-    onReset(event) {
-        event.preventDefault()
-    },
     addTime(givenTime){
       let notCurrentlyIn = true;
       for(var i = 0; i< this.newVolunteer.avalibilityTimes.length; i++){
