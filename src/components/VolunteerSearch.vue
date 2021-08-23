@@ -129,19 +129,18 @@ export default {
       this.pageDisplay = 'matchWithOpportunity';
     },
     searchAndReturn(){
-      var regex = new RegExp(this.searchText, );
+      var regex = new RegExp(this.searchText.toLowerCase(), );
       this.volunteersFiltered = [];
       if(this.searchTypeChoice == 'approvalStatus'){
         for(var i = 0; i<this.volunteers.length; i++){
-          if(regex.test(this.volunteers[i].approvalStatus)){
+          if(regex.test(this.volunteers[i].approvalStatus.toLowerCase())){
             this.volunteersFiltered.push(this.volunteers[i]);
           }
         }
       }
       else if(this.searchTypeChoice == 'username'){
-        
         for(var l = 0; l<this.volunteers.length; l++){
-          if(regex.test(this.volunteers[l].username)){
+          if(regex.test(this.volunteers[l].username.toLowerCase())){
             this.volunteersFiltered.push(this.volunteers[l]);
           }
         }
@@ -149,7 +148,7 @@ export default {
       else if(this.searchTypeChoice == 'preferredCenters'){
         for(var r = 0; r<this.volunteers.length; r++){
           for(var j = 0; j<this.volunteers[r].preferredCenters.length; j++){
-            if(regex.test(this.volunteers[r].preferredCenters[j])){
+            if(regex.test(this.volunteers[r].preferredCenters[j].toLowerCase())){
               this.volunteersFiltered.push(this.volunteers[r]);
             }
           }
@@ -158,7 +157,7 @@ export default {
       else if(this.searchTypeChoice == 'skills'){
         for(var t = 0; t<this.volunteers.length; t++){
           for(var f =0; f<this.volunteers[t].skills.length; f++){
-            if(regex.test(this.volunteers[t].skills[f])){
+            if(regex.test(this.volunteers[t].skills[f].toLowerCase())){
               this.volunteersFiltered.push(this.volunteers[t]);
             }
           }
